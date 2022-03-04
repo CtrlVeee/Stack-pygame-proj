@@ -1,4 +1,4 @@
-from turtle import bgcolor
+
 import pygame as pg
 
 pg.init()
@@ -10,11 +10,11 @@ fps = 30
 clock = pg.time.Clock()
 
 bg_color = (70, 70, 70)
-
 def main():
     loop = True
     while loop:
         scr.fill(bg_color)
+        scr.blit
         pg.display.update()
 
         for ev in pg.event.get():
