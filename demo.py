@@ -50,6 +50,7 @@ def main():
 
         #check if 4 values
         if len(noComma) == 4:
+            #check if all int
             for val in noComma:
                 try:
                     num = int(val)
@@ -59,13 +60,12 @@ def main():
                     noStr = False
             if not noStr:
                 print('please enter digits')
+                #resets data
                 noStr = True
                 noSpace = ''
                 newData = []
             else:
-                #continue code here
-                #print('ok this is where you start coding the compare')
-                #print(newData)
+                #compare inputs to the generated bet
                 result = compare(newData, bet)
                 print(result)
                 if result == win_data:
@@ -74,11 +74,13 @@ def main():
                     loop=False
                     break
                 else:
+                    #resets data
                     noStr = True
                     noSpace = ''
                     newData = []
                     print('wrong guess, try again')
         else:
+            #resets data
             noStr = True
             noSpace = ''
             newData = []
