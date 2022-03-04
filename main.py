@@ -2,8 +2,8 @@ from turtle import bgcolor
 import pygame as pg
 
 pg.init()
-scr_w = 640
-scr_h = 640
+scr_w = 720
+scr_h = 576
 scr = pg.display.set_mode((scr_w, scr_h))
 
 fps = 30
