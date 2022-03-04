@@ -4,6 +4,7 @@ for x in range(16):
     deck.append(x+1)
 #print(deck)
 bet = random.sample(deck, k=4)
+win_data = ['/','/','/','/']
 #print(random.sample(deck, k=len(deck)))
 print(bet)
 
@@ -15,24 +16,24 @@ def compare(data):
             answer = True
     return answer
 
-def demo():
-    loop = True
-    while loop:
-        guess = input("Enter guess: ")
-        try:
-            guess = int(guess)
-            if guess >= len(deck) or guess <= 0:
-                print(f"Must be within 1-{len(deck)}")
-            else:
-                #print("guess is within the range")
-                if compare(guess) == True:
-                    print("your guess was True")
-                    print("Program ended")
-                    break
-                else:
-                    print("Wrong Answer")
-        except:
-            print("Please enter a number")
+def compare(inValue, genData):
+    a = genData
+    b = inValue
+    
+    compare = ['','','','']
+
+    for count, val in enumerate(b):
+        #print(count)
+        if val in a:
+            compare[count] = '!'
+            if a[count] == val:
+                compare[count] = '/'
+            #print(True)
+        else:
+            compare[count] = 'x'
+            #print(False)
+    #print(compare)
+    return compare
 
 def main():
     loop = True
@@ -53,14 +54,33 @@ def main():
                 try:
                     num = int(val)
                     newData.append(num)
+                    
                 except:
                     noStr = False
-                    break
             if not noStr:
                 print('please enter digits')
+                noStr = True
+                noSpace = ''
+                newData = []
             else:
                 #continue code here
-                print('all ints checked')
-                print(newData)
+                #print('ok this is where you start coding the compare')
+                #print(newData)
+                result = compare(newData, bet)
+                print(result)
+                if result == win_data:
+                    print("you guessed it right!\nYou won!!")
+                    print("program ended")
+                    loop=False
+                    break
+                else:
+                    noStr = True
+                    noSpace = ''
+                    newData = []
+                    print('wrong guess, try again')
         else:
-            print('please enter 4 digits\nseparated by commas\n or spaces')
+            noStr = True
+            noSpace = ''
+            newData = []
+            print('please enter 4 digits\nseparated by commas\spaces')
+main()

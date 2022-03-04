@@ -1,13 +1,13 @@
-data = '1, 2, 4,5'
+data = '1, 2, 4, 5'
 noSpace = ''
 noStr = True
 splits = data.split(' ')
-print(splits)
+#print(splits)
 for val in splits:
     noSpace += val
-print(noSpace)
+#print(noSpace)
 noComma = noSpace.split(',')
-print(noComma)
+#print(noComma)
 newData = []
 for val in noComma:
     try:
