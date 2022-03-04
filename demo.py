@@ -15,21 +15,21 @@ def compare(data):
             answer = True
     return answer
 
-
-loop = True
-while loop:
-    guess = input("Enter guess: ")
-    try:
-        guess = int(guess)
-        if guess >= len(deck) or guess <= 0:
-            print(f"Must be within 1-{len(deck)}")
-        else:
-            #print("guess is within the range")
-            if compare(guess) == True:
-                print("your guess was True")
-                print("Program ended")
-                break
+def demo():
+    loop = True
+    while loop:
+        guess = input("Enter guess: ")
+        try:
+            guess = int(guess)
+            if guess >= len(deck) or guess <= 0:
+                print(f"Must be within 1-{len(deck)}")
             else:
-                print("Wrong Answer")
-    except:
-        print("Please enter a number")
+                #print("guess is within the range")
+                if compare(guess) == True:
+                    print("your guess was True")
+                    print("Program ended")
+                    break
+                else:
+                    print("Wrong Answer")
+        except:
+            print("Please enter a number")
