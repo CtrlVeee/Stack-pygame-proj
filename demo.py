@@ -33,3 +33,34 @@ def demo():
                     print("Wrong Answer")
         except:
             print("Please enter a number")
+
+def main():
+    loop = True
+    noSpace = ''
+    noStr = True
+    newData = []
+    while loop:
+        data = input("Enter guess: ")
+        #separate into diff values
+        splits = data.split(' ')
+        for val in splits:
+                noSpace += val
+        noComma = noSpace.split(',')
+
+        #check if 4 values
+        if len(noComma) == 4:
+            for val in noComma:
+                try:
+                    num = int(val)
+                    newData.append(num)
+                except:
+                    noStr = False
+                    break
+            if not noStr:
+                print('please enter digits')
+            else:
+                #continue code here
+                print('all ints checked')
+                print(newData)
+        else:
+            print('please enter 4 digits\nseparated by commas\n or spaces')
