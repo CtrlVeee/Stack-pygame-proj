@@ -1,6 +1,6 @@
 a = [1, 3, 4, 5]
 b = [2, 1, 7, 5]
-same = True
+
 compare = ['','','','']
 
 for count, val in enumerate(b):

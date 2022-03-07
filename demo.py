@@ -6,7 +6,7 @@ for x in range(16):
 bet = random.sample(deck, k=4)
 win_data = ['/','/','/','/']
 #print(random.sample(deck, k=len(deck)))
-print(bet)
+#print(bet)
 
 
 def compare(data):
@@ -28,11 +28,8 @@ def compare(inValue, genData):
             compare[count] = '!'
             if a[count] == val:
                 compare[count] = '/'
-            #print(True)
         else:
             compare[count] = 'x'
-            #print(False)
-    #print(compare)
     return compare
 
 def main():
@@ -79,6 +76,7 @@ def main():
                     noSpace = ''
                     newData = []
                     print('wrong guess, try again')
+                    #this msg is kinda annoying
         else:
             #resets data
             noStr = True

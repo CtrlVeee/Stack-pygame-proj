@@ -9,7 +9,8 @@ scr = pg.display.set_mode((scr_w, scr_h))
 fps = 30
 clock = pg.time.Clock()
 
-bg_color = (70, 70, 70)
+
+bg_color = pg.Color(23, 17, 26)
 def main():
     loop = True
     while loop:
