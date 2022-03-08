@@ -22,14 +22,17 @@ def dead_cntr (scr, dim):
     y = abs(int((scr.get_height() - dim[1])/2))
     return (x, y)
 
-class card_obj:
+
+class card_obj(pg.sprite.Sprite):
     def __init__(self, placement, type):
+        pg.sprite.Sprite.__init__(self)
         self.rect = placement
         self.type = type #what color and symbol
         self.hint_active = False
         self.hover = False #tracks if mouse hovers over card
         self.in_use = False #sets if the deck shows an empty-card or a flipped one
         # the card objs will be updated through a sprite group
+
 '''
 loop = True
 while loop:
