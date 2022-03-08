@@ -27,9 +27,10 @@ class card_obj:
         self.rect = placement
         self.type = type #what color and symbol
         self.hint_active = False
-        self.face = 'face-down' #sets if flipped or not
+        self.hover = False #tracks if mouse hovers over card
+        self.in_use = False #sets if the deck shows an empty-card or a flipped one
         # the card objs will be updated through a sprite group
-
+'''
 loop = True
 while loop:
     scr.fill((23, 17, 26))
@@ -40,3 +41,4 @@ while loop:
         if ev.type == pg.QUIT:
             loop= False
             break
+'''
