@@ -29,9 +29,9 @@ for y in range(6):
         cards.append(card)
 
 card_group = pg.sprite.Group()
-for x in range(1):
-    card_rect = pg.Rect(0, 0, 14, 19)
-    card = card_obj(card_rect, cards[6*2], deck_srf)
+for x in range(8):
+    card_rect = pg.Rect(x*18*scale, 0*scale, 14*scale, 19*scale)
+    card = card_obj(card_rect, cards[x], deck_srf)
     card_group.add(card)
 
 def main():
