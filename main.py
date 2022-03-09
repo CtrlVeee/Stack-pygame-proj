@@ -19,19 +19,19 @@ deck_rect = deck_srf.get_rect()
 deck_srf.fill(pink)
 
 scale = 4
-card_sheet = pg.image.load('card-sheet.png')
+card_sheet = pg.image.load('card-sheet.png').convert_alpha()
 cards = []
 for y in range(6):
     for x in range(6):
-        init_card = pg.Surface((14, 19))
+        init_card = pg.Surface((14, 19)).convert_alpha()
         init_card.blit(card_sheet, (0,0), (x*14, y*19, 14, 19))
         card = pg.transform.scale(init_card, (14*scale, 19*scale))
         cards.append(card)
 
-card_group = pg.sprite.Sprite.group()
-for x in range(4):
+card_group = pg.sprite.Group()
+for x in range(1):
     card_rect = pg.Rect(0, 0, 14, 19)
-    card = card_obj(card_rect, cards[x], deck_srf)
+    card = card_obj(card_rect, cards[6*2], deck_srf)
     card_group.add(card)
 
 def main():

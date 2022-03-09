@@ -12,6 +12,7 @@ class card_obj(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self)
         self.rect = rect_data
         self.img = kindOf #what color and symbol
+        self.flipped_img = pg.image.load("flipped-card.png")
         self.blit_srf = scr
         self.hint_active = False
         self.hover = False #tracks if mouse hovers over card
