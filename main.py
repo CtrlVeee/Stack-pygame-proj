@@ -18,6 +18,9 @@ deck_srf = pg.Surface((118*scale, 36*scale))
 deck_rect = deck_srf.get_rect()
 deck_srf.fill(pink)
 
+deck_pos = dead_cntr(deck_srf, dimen)
+print(deck_pos)
+
 scale = 4
 card_sheet = pg.image.load('card-sheet.png').convert_alpha()
 cards = []
@@ -38,7 +41,7 @@ def main():
     loop = True
     while loop:
         scr.fill(bg_color)
-        scr.blit(deck_srf, dead_cntr(deck_srf, dimen))
+        scr.blit(deck_srf, deck_pos)
         card_group.update()
         #scr.blit(cards[6*1], dead_cntr(cards[0], dimen))
         pg.display.update()
