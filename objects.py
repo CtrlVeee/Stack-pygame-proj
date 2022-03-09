@@ -20,9 +20,18 @@ class card_obj(pg.sprite.Sprite):
         self.hover = False #tracks if mouse hovers over card
         self.in_use = False #sets if the deck shows an empty-card or a flipped one
         # the card objs will be updated through a sprite group
+    def mouse_track(self):
+        mos_pos = pg.mouse.get_pos()
+        pg.draw.rect(self.blit_srf, (0, 255, 0), self.rect, 2)
+        print(mos_pos)
+        print(self.rect)
+    
     def update(self):
+
+        #print(self.rect)
         if self.hover == False:
             self.blit_img = self.flipped_img
-        elif self.hover == True:
-            self.blit_img = self.img
+        #elif self.hover == True:
+        #    self.blit_img = self.img
         self.blit_srf.blit(self.blit_img, self.rect)
+        self.mouse_track()
