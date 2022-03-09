@@ -1,4 +1,5 @@
 #use for 
+#fix deck card mechanism
 import pygame as pg
 from main import deck_pos
 scale = 4
