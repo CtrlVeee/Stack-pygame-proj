@@ -14,7 +14,7 @@ clock = pg.time.Clock()
 bg_color = pg.Color(23, 17, 26)
 pink = pg.Color(255, 128, 170)
 
-deck_srf = pg.Surface((120*scale, 36*scale))
+deck_srf = pg.Surface((118*scale, 36*scale))
 deck_rect = deck_srf.get_rect()
 deck_srf.fill(pink)
 
@@ -30,7 +30,7 @@ for y in range(6):
 
 card_group = pg.sprite.Group()
 for x in range(8):
-    card_rect = pg.Rect(x*18*scale, 0*scale, 14*scale, 19*scale)
+    card_rect = pg.Rect(x*15*scale, 0*scale, 14*scale, 17*scale)
     card = card_obj(card_rect, cards[x], deck_srf)
     card_group.add(card)
 
