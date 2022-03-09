@@ -1,4 +1,6 @@
 #place all funcs and obj definition here
+
+#this file is not in use...in the meantime
 import pygame as pg
 dimen = (720, 576)
 scale = 4
@@ -24,9 +26,9 @@ def dead_cntr (scr, dim):
 
 
 class card_obj(pg.sprite.Sprite):
-    def __init__(self, placement, type):
+    def __init__(self, rect_data, type):
         pg.sprite.Sprite.__init__(self)
-        self.rect = placement
+        self.rect = rect_data
         self.type = type #what color and symbol
         self.hint_active = False
         self.hover = False #tracks if mouse hovers over card
