@@ -15,12 +15,15 @@ clock = pg.time.Clock()
 bg_color = pg.Color(23, 17, 26)
 pink = pg.Color(255, 128, 170)
 
-deck_srf = pg.Surface((118*scale, 36*scale))
+deck_srf = pg.Surface((119*scale, 36*scale))
 deck_rect = deck_srf.get_rect()
-deck_srf.fill(pink)
+
 
 deck_pos = dead_cntr(deck_srf, dimen)
 print(deck_pos)
+
+#rando_box = pg.Surface((50, 50))
+#rando_box.fill(pg.Color(0, 0, 255))
 
 scale = 4
 card_sheet = pg.image.load('card-sheet.png').convert_alpha()
@@ -33,9 +36,9 @@ for y in range(6):
         cards.append(card)
 
 card_group = pg.sprite.Group()
-for x in range(1):
+for x in range(8):
     card_rect = pg.Rect(x*15*scale, 0*scale, 14*scale, 17*scale)
-    card = card_obj(card_rect, cards[x], deck_srf, deck_pos)
+    card = card_obj(card_rect, cards[x], deck_srf, deck_pos, scr)
     card_group.add(card)
 
 def main():
@@ -43,6 +46,7 @@ def main():
     while loop:
         scr.fill(bg_color)
         scr.blit(deck_srf, deck_pos)
+        deck_srf.fill(pink)
         card_group.update()
         #scr.blit(cards[6*1], dead_cntr(cards[0], dimen))
         pg.display.update()
