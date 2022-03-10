@@ -1,7 +1,6 @@
 import pygame as pg
 from objects import *
 
-
 pg.init()
 #convert all sprites to 4x size
 scr_w = 720
@@ -15,25 +14,42 @@ clock = pg.time.Clock()
 bg_color = pg.Color(23, 17, 26)
 pink = pg.Color(255, 128, 170)
 
-deck_srf = pg.Surface((119*scale, 36*scale))
+deck_srf = pg.Surface((119*scale, 36*scale)).convert_alpha()
 deck_rect = deck_srf.get_rect()
 
 
 deck_pos = dead_cntr(deck_srf, dimen)
-print(deck_pos)
+deck_pos[1] = scr_h - (56*scale)
+#print(deck_pos)
 
 #rando_box = pg.Surface((50, 50))
 #rando_box.fill(pg.Color(0, 0, 255))
 
+prior = [
+    [0,0], [3, 0], [4, 0], [1,0],
+    [0,1], [3, 1], [4, 1], [1,1],
+    [0,5], [3, 5], [4, 5], [1,5],
+    [0,2], [3, 2], [4, 2], [1,2]
+]
+
 scale = 4
 card_sheet = pg.image.load('card-sheet.png').convert_alpha()
 cards = []
+
+for pos in prior:
+    init_card = pg.Surface((14, 19)).convert_alpha()
+    init_card.blit(card_sheet, (0,0), (pos[0]*14, pos[1]*19, 14, 19))
+    card = pg.transform.scale(init_card, (14*scale, 19*scale))
+    cards.append(card)
+
+'''
 for y in range(6):
     for x in range(6):
         init_card = pg.Surface((14, 19)).convert_alpha()
         init_card.blit(card_sheet, (0,0), (x*14, y*19, 14, 19))
         card = pg.transform.scale(init_card, (14*scale, 19*scale))
         cards.append(card)
+'''
 
 card_group = pg.sprite.Group()
 for x in range(8):
@@ -41,12 +57,17 @@ for x in range(8):
     card = card_obj(card_rect, cards[x], deck_srf, deck_pos, scr)
     card_group.add(card)
 
+for y in range(8):
+    card_rect = pg.Rect(y*15*scale, 18*scale, 14*scale, 17*scale)
+    card = card_obj(card_rect, cards[y+8], deck_srf, deck_pos, scr)
+    card_group.add(card)
+
 def main():
     loop = True
     while loop:
         scr.fill(bg_color)
         scr.blit(deck_srf, deck_pos)
-        deck_srf.fill(pink)
+        deck_srf.fill(bg_color)
         card_group.update()
         #scr.blit(cards[6*1], dead_cntr(cards[0], dimen))
         pg.display.update()

@@ -1,5 +1,6 @@
 #use for 
-#fix deck card mechanism
+#fix deck card mechanism---done
+#change card sheet from 36 cards to 16
 import pygame as pg
 
 scale = 4
@@ -7,7 +8,7 @@ scale = 4
 def dead_cntr (scr, dim):
     x = abs(int((scr.get_width() - dim[0])/2))
     y = abs(int((scr.get_height() - dim[1])/2))
-    return (x, y)
+    return [x, y]
 
 
 class card_obj(pg.sprite.Sprite):
