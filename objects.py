@@ -1,6 +1,7 @@
 #use for 
 #fix deck card mechanism---done
 #change card sheet from 36 cards to 16
+from math import fabs
 import pygame as pg
 
 scale = 4
@@ -25,6 +26,7 @@ class card_obj(pg.sprite.Sprite):
         self.hint_active = False
         self.hover = False #tracks if mouse hovers over card
         self.in_use = False #sets if the deck shows an empty-card or a flipped one
+        self.grab = False
 
         self.deckPos = deckPos
 
@@ -41,24 +43,41 @@ class card_obj(pg.sprite.Sprite):
         # the card objs will be updated through a sprite group
     def mouse_track(self):
         mos_pos = pg.mouse.get_pos()
-        #pg.draw.rect(self.blit_srf, (0, 255, 0), self.apparent_rect, 2)
 
         if self.apparent_rect.collidepoint(mos_pos):
             self.hover = True
         else:
             self.hover = False
-        #print(self.hover)
-        #print(mos_pos)
-        #rect data is relative to the its surface, problem with 
-        #print(self.apparent_rect)
+    def grab_card(self):
+        mos_pos = pg.mouse.get_pos()
+        dx = mos_pos[0] - int(self.apparent_rect.width)/2
+        dy = mos_pos[1] - int(self.apparent_rect.height)/2
+        #print(dx, dy)
+        self.blit_srf.blit(self.img, (dx, dy))
     
     def update(self):
+        pressed = pg.mouse.get_pressed()[0]
         self.mouse_track()
         self.blit_srf.blit(self.blit_img, self.apparent_rect)
+        '''
+        if pressed:
+            self.grab = True
+            self.hover = False
+            self.grab_card()
+        '''
 
         if self.hover:            
             self.blit_srf.blit(self.img, self.hover_rect)
-        #self.blit_srf.blit(self.blit_img, self.rect)
+            # from this point to the end of the func 
+            # is where the mouse mech is made
+            if pressed:
+                self.grab = True
+                self.hover = False
+
+        if self.grab and pressed:
+            self.grab_card()
+        if not pressed:
+            self.grab = False
 
 class table_obj:
     def __init__(self, pos):
@@ -113,7 +132,7 @@ class table_obj:
             if card[2] != -1:
                 blit_img = self.cards[card[2]]
             self.srf.blit(blit_img, card[1])
-            
+
     def blit(self, scr):
         if self.active_state:
             self.srf.blit(self.scaled_img, (0,0), (0, 0, 94*scale, 37*scale))

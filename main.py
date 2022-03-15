@@ -1,6 +1,8 @@
 import pygame as pg
 from objects import *
 
+#next task is make function for the moouse mechanism
+
 pg.init()
 #convert all sprites to 4x size
 scr_w = 720
@@ -58,11 +60,12 @@ def main():
     loop = True
     while loop:
         scr.fill(bg_color)
+        Table.blit(scr)
+
         scr.blit(deck_srf, deck_pos)
         deck_srf.fill(bg_color)
         card_group.update()
-        #scr.blit(cards[6*1], dead_cntr(cards[0], dimen))
-        Table.blit(scr)
+        
         pg.display.update()
 
         for ev in pg.event.get():
