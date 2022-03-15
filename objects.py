@@ -60,3 +60,64 @@ class card_obj(pg.sprite.Sprite):
             self.blit_srf.blit(self.img, self.hover_rect)
         #self.blit_srf.blit(self.blit_img, self.rect)
 
+class table_obj:
+    def __init__(self, pos):
+        #init all img
+        self.img = pg.image.load("slot-table.png").convert_alpha()
+        self.scaled_img = pg.transform.scale(self.img, (94*scale, 74*scale))
+
+        self.slot_cell_img = pg.image.load("slot-cell.png").convert_alpha()
+        self.scaled_cell_img = pg.transform.scale(self.slot_cell_img, (36*scale, 24*scale))
+        
+        #setup table data
+        self.pos = pos
+        self.srf = pg.Surface((94*scale, 37*scale)).convert_alpha()
+
+        #init prior list of big cards
+        prior = [
+            [0,0], [3, 0], [4, 0], [1,0],
+            [0,1], [3, 1], [4, 1], [1,1],
+            [0,5], [3, 5], [4, 5], [1,5],
+            [0,2], [3, 2], [4, 2], [1,2]
+        ]
+        self.cards = []
+        big_cards = pg.image.load("big-card-sheet.png").convert_alpha()
+        for pos in prior:
+            init_card = pg.Surface((18, 24)).convert_alpha()
+            init_card.blit(big_cards, (0,0), (pos[0]*18, pos[1]*24, 18, 24))
+            add_card = pg.transform.scale(init_card, (18*scale, 24*scale))
+            self.cards.append(add_card)
+
+        #setup slot data
+        self.slot_list = []
+        for x in range(4):
+            slot_srf = pg.Surface((18*scale, 24*scale)).convert_alpha()
+            slot_srf.blit(self.scaled_cell_img, (0,0), (0, 0, 18*scale, 24*scale))
+            #slot_pos = dead_cntr(self.srf, [18*scale, 24*scale])
+            slot_pos = [(89 - (18*(x+1)) - 4*x )*scale, int((37-24)/2)*scale]
+            #add empty_img, then pos, then card_img (-1 is none)
+
+            card = [slot_srf, slot_pos, -1]
+            self.slot_list.append(card)
+
+        self.active_state = False
+    def hover(self, rect):
+        mos_pos = pg.mouse.get_pos()
+        return rect.collidepoint(mos_pos)
+    
+    def card_func(self):
+        # if 3rd arg is -1, use default img
+        # if hover, use white default, else, dark
+        for card in self.slot_list:
+            blit_img = card[0]
+            if card[2] != -1:
+                blit_img = self.cards[card[2]]
+            self.srf.blit(blit_img, card[1])
+            
+    def blit(self, scr):
+        if self.active_state:
+            self.srf.blit(self.scaled_img, (0,0), (0, 0, 94*scale, 37*scale))
+        else:
+            self.srf.blit(self.scaled_img, (0,0), (0, 37*scale, 94*scale, 37*scale))
+        self.card_func()
+        scr.blit(self.srf, self.pos)

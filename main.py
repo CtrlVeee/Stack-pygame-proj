@@ -14,16 +14,11 @@ clock = pg.time.Clock()
 bg_color = pg.Color(23, 17, 26)
 pink = pg.Color(255, 128, 170)
 
+#surface for the deck selection
 deck_srf = pg.Surface((119*scale, 36*scale)).convert_alpha()
 deck_rect = deck_srf.get_rect()
-
-
 deck_pos = dead_cntr(deck_srf, dimen)
 deck_pos[1] = scr_h - (56*scale)
-#print(deck_pos)
-
-#rando_box = pg.Surface((50, 50))
-#rando_box.fill(pg.Color(0, 0, 255))
 
 prior = [
     [0,0], [3, 0], [4, 0], [1,0],
@@ -42,15 +37,7 @@ for pos in prior:
     card = pg.transform.scale(init_card, (14*scale, 19*scale))
     cards.append(card)
 
-'''
-for y in range(6):
-    for x in range(6):
-        init_card = pg.Surface((14, 19)).convert_alpha()
-        init_card.blit(card_sheet, (0,0), (x*14, y*19, 14, 19))
-        card = pg.transform.scale(init_card, (14*scale, 19*scale))
-        cards.append(card)
-'''
-
+# make the card selection
 card_group = pg.sprite.Group()
 for x in range(8):
     card_rect = pg.Rect(x*15*scale, 0*scale, 14*scale, 17*scale)
@@ -62,6 +49,11 @@ for y in range(8):
     card = card_obj(card_rect, cards[y+8], deck_srf, deck_pos, scr)
     card_group.add(card)
 
+#make the table obj
+table_x = int((scr_w - 94*scale)/2) 
+table_y = int((scr_h - 37*scale)/2) - 80
+Table = table_obj((table_x, table_y))
+
 def main():
     loop = True
     while loop:
@@ -70,6 +62,7 @@ def main():
         deck_srf.fill(bg_color)
         card_group.update()
         #scr.blit(cards[6*1], dead_cntr(cards[0], dimen))
+        Table.blit(scr)
         pg.display.update()
 
         for ev in pg.event.get():
