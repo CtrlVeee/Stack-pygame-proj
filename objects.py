@@ -1,6 +1,9 @@
 #use for 
 #fix deck card mechanism---done
-#change card sheet from 36 cards to 16
+#change card sheet from 36 cards to 16---done
+# new task: if card is in use, blit empty card instead (deck)
+# if all data in data list is not -1, blit the algo button
+
 #from math import fabs
 import pygame as pg
 
@@ -99,14 +102,24 @@ class table_obj:
         # white or dark frame
         self.active_state = False
 
-        # float_card data
+        # float_card data ---not in use yet
         self.card_in_hover = 17
         self.card_in_use = False
+
+        # get data of all cards in slot-cells
+        self.data_list = []
+        for card in self.slot_list:
+            self.data_list.append(card[2])
+    def update_data(self):
+        self.data_list = []
+        for card in self.slot_list:
+            self.data_list.append(card[2])
+
     def mouse_collide(self, rect):
         mos_pos = pg.mouse.get_pos()
         return rect.collidepoint(mos_pos)
 
-    def float_card(self, rect, index, scr):
+    def float_card(self, rect, index, scr): #not used yet
         mos_pos = pg.mouse.get_pos()
         dx = mos_pos[0] - int(rect.width)/2
         dy = mos_pos[1] - int(rect.height)/2
@@ -140,9 +153,11 @@ class table_obj:
                 #self.float_card(card[3], int_val, scr)
             if card[2] != -1:
                 blit_img = self.cards[card[2]]
+            self.update_data()
             self.srf.blit(blit_img, card[1])
 
     def blit(self, scr, int_val, card_in_use):
+        print(self.data_list)
         if self.active_state:
             self.srf.blit(self.scaled_img, (0,0), (0, 0, 94*scale, 37*scale))
         else:
