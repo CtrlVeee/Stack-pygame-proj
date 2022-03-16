@@ -1,7 +1,7 @@
 #use for 
 #fix deck card mechanism---done
 #change card sheet from 36 cards to 16
-from math import fabs
+#from math import fabs
 import pygame as pg
 
 scale = 4
@@ -17,13 +17,15 @@ class card_obj(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self)
         self.rect = rect_data 
         self.img = kindOf #what color and symbol
+
         flipped_img = pg.image.load("flipped-card.png").convert_alpha()
         self.flipped_img = pg.transform.scale(flipped_img, (14*scale, 17*scale))
+
         self.blit_img = self.flipped_img
         self.blit_srf = screen
         self.screen = screen
+
         self.marker = int_val
-        
         self.hint_active = False
         self.hover = False #tracks if mouse hovers over card
         self.in_use = False #sets if the deck shows an empty-card or a flipped one
@@ -94,31 +96,56 @@ class table_obj:
 
             card = [slot_srf, slot_pos, -1, slot_rect]
             self.slot_list.append(card)
-
+        # white or dark frame
         self.active_state = False
-    def hover(self, rect):
+
+        # float_card data
+        self.card_in_hover = 17
+        self.card_in_use = False
+    def mouse_collide(self, rect):
         mos_pos = pg.mouse.get_pos()
         return rect.collidepoint(mos_pos)
+
+    def float_card(self, rect, index, scr):
+        mos_pos = pg.mouse.get_pos()
+        dx = mos_pos[0] - int(rect.width)/2
+        dy = mos_pos[1] - int(rect.height)/2
+
+        pressed = pg.mouse.get_pressed()[0]
+
+        if rect.collidepoint(mos_pos) and pressed:
+            if not self.card_in_use:
+                self.card_in_hover = index
+            self.card_in_use = True
+        if pressed:
+            try:
+                scr.blit(self.cards[card_in_hover], (dx, dy))
+            except: 
+                self.card_in_use = False
+        if not pressed:
+            card_in_hover = 17
+            self.card_in_use = False
     
-    def card_func(self, int_val, hover):
+    def card_func(self, int_val, card_in_use, scr):
         # if 3rd arg is -1, use default img
         # if hover, use white default, else, dark
-
-        mos_pos = pg.mouse.get_pos()
-        pressed = pg.mouse.get_pressed()[0]
-        allow = False
+        #print(card_in_use)
+        pressed_list = pg.mouse.get_pressed()
         for card in self.slot_list:
             blit_img = card[0]
-            if card[3].collidepoint(mos_pos) and hover and not pressed:
+            if self.mouse_collide(card[3]) and card_in_use and not pressed_list[0]:
                 card[2] = int_val
+            elif self.mouse_collide(card[3]) and not card_in_use and pressed_list[2]:
+                card[2] = -1
+                #self.float_card(card[3], int_val, scr)
             if card[2] != -1:
                 blit_img = self.cards[card[2]]
             self.srf.blit(blit_img, card[1])
 
-    def blit(self, scr, int_val, hover):
+    def blit(self, scr, int_val, card_in_use):
         if self.active_state:
             self.srf.blit(self.scaled_img, (0,0), (0, 0, 94*scale, 37*scale))
         else:
             self.srf.blit(self.scaled_img, (0,0), (0, 37*scale, 94*scale, 37*scale))
-        self.card_func(int_val, hover)
+        self.card_func(int_val, card_in_use, scr)
         scr.blit(self.srf, self.pos)
