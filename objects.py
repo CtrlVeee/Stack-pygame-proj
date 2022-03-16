@@ -36,10 +36,6 @@ class card_obj(pg.sprite.Sprite):
         self.apparent_rect = pg.Rect(new_x, new_y, self.rect.w, self.rect.h)
         hover_y = self.apparent_rect.y - 6*scale
         self.hover_rect = pg.Rect(self.apparent_rect.x, hover_y, self.rect.w, self.rect.h)
-        #print(self.deckPos)
-        #print(self.apparent_rect)
-        #print(self.rect)
-        #print(self.hover_rect)
 
         # the card objs will be updated through a sprite group
     def mouse_track(self, in_use):
@@ -51,34 +47,10 @@ class card_obj(pg.sprite.Sprite):
             self.hover = False
     
     def update(self, in_use):
-        pressed = pg.mouse.get_pressed()[0]
         self.mouse_track(in_use)
         self.blit_srf.blit(self.blit_img, self.apparent_rect)
         if self.hover:            
             self.blit_srf.blit(self.img, self.hover_rect)
-        '''
-        if pressed:
-            self.grab = True
-            self.hover = False
-            self.grab_card()
-        '''
-        #This is where the mouse mecha originally was
-        
-        '''
-            # from this point to the end of the func 
-            # is where the mouse mech is made
-            #error, all cards are subject to the hover effect 
-            #despite already selected a card... 
-            #grab_card display overlaps with teh other imgs
-            if pressed:
-                self.grab = True
-                self.hover = False
-
-        if self.grab and pressed:
-            self.grab_card()
-        if not pressed:
-            self.grab = False
-        '''
 
 class table_obj:
     def __init__(self, pos):
@@ -113,11 +85,14 @@ class table_obj:
         for x in range(4):
             slot_srf = pg.Surface((18*scale, 24*scale)).convert_alpha()
             slot_srf.blit(self.scaled_cell_img, (0,0), (0, 0, 18*scale, 24*scale))
-            #slot_pos = dead_cntr(self.srf, [18*scale, 24*scale])
             slot_pos = [(89 - (18*(x+1)) - 4*x )*scale, int((37-24)/2)*scale]
+
+            new_x = slot_pos[0] + self.pos[0]
+            new_y = slot_pos[1] + self.pos[1]
+            slot_rect = pg.Rect(new_x, new_y, 18*scale, 24*scale)
             #add empty_img, then pos, then card_img (-1 is none)
 
-            card = [slot_srf, slot_pos, -1]
+            card = [slot_srf, slot_pos, -1, slot_rect]
             self.slot_list.append(card)
 
         self.active_state = False
@@ -125,19 +100,25 @@ class table_obj:
         mos_pos = pg.mouse.get_pos()
         return rect.collidepoint(mos_pos)
     
-    def card_func(self):
+    def card_func(self, int_val, hover):
         # if 3rd arg is -1, use default img
         # if hover, use white default, else, dark
+
+        mos_pos = pg.mouse.get_pos()
+        pressed = pg.mouse.get_pressed()[0]
+        allow = False
         for card in self.slot_list:
             blit_img = card[0]
+            if card[3].collidepoint(mos_pos) and hover and not pressed:
+                card[2] = int_val
             if card[2] != -1:
                 blit_img = self.cards[card[2]]
             self.srf.blit(blit_img, card[1])
 
-    def blit(self, scr):
+    def blit(self, scr, int_val, hover):
         if self.active_state:
             self.srf.blit(self.scaled_img, (0,0), (0, 0, 94*scale, 37*scale))
         else:
             self.srf.blit(self.scaled_img, (0,0), (0, 37*scale, 94*scale, 37*scale))
-        self.card_func()
+        self.card_func(int_val, hover)
         scr.blit(self.srf, self.pos)

@@ -1,7 +1,7 @@
 import pygame as pg
 from objects import *
 
-#next task is make function for the moouse mechanism
+#next task is put card select into table obj
 
 pg.init()
 #convert all sprites to 4x size
@@ -16,7 +16,7 @@ clock = pg.time.Clock()
 bg_color = pg.Color(23, 17, 26)
 pink = pg.Color(255, 128, 170)
 
-card_in_hover = -1
+card_in_hover = 17
 card_in_use = False
 
 #surface for the deck selection
@@ -61,10 +61,10 @@ def hover_func(rect, index):
     if pressed:
         try:
             scr.blit(cards[card_in_hover], (dx, dy))
-            #print(index)
-        except: print("error")
+        except: 
+            card_in_use = False
     if not pressed:
-        card_in_hover = -1
+        card_in_hover = 17
         card_in_use = False
 
 # make the card objects
@@ -87,9 +87,9 @@ Table = table_obj((table_x, table_y))
 def main():
     loop = True
     while loop:
-        print(card_in_hover)
+        
         scr.fill(bg_color)
-        Table.blit(scr)
+        Table.blit(scr, card_in_hover, card_in_use)
 
         scr.blit(deck_srf, deck_pos)
         deck_srf.fill(bg_color)
