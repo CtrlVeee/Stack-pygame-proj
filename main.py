@@ -16,6 +16,9 @@ clock = pg.time.Clock()
 bg_color = pg.Color(23, 17, 26)
 pink = pg.Color(255, 128, 170)
 
+card_in_hover = -1
+card_in_use = False
+
 #surface for the deck selection
 deck_srf = pg.Surface((119*scale, 36*scale)).convert_alpha()
 deck_rect = deck_srf.get_rect()
@@ -30,6 +33,8 @@ prior = [
 ]
 
 scale = 4
+
+#make the card imgs
 card_sheet = pg.image.load('card-sheet.png').convert_alpha()
 cards = []
 
@@ -39,16 +44,39 @@ for pos in prior:
     card = pg.transform.scale(init_card, (14*scale, 19*scale))
     cards.append(card)
 
-# make the card selection
+#mouse mecha
+def hover_func(rect, index):
+    mos_pos = pg.mouse.get_pos()
+    dx = mos_pos[0] - int(rect.width)/2
+    dy = mos_pos[1] - int(rect.height)/2
+
+    pressed = pg.mouse.get_pressed()[0]
+    global card_in_hover
+    global card_in_use
+
+    if rect.collidepoint(mos_pos) and pressed:
+        if not card_in_use:
+            card_in_hover = index
+        card_in_use = True
+    if pressed:
+        try:
+            scr.blit(cards[card_in_hover], (dx, dy))
+            #print(index)
+        except: print("error")
+    if not pressed:
+        card_in_hover = -1
+        card_in_use = False
+
+# make the card objects
 card_group = pg.sprite.Group()
 for x in range(8):
     card_rect = pg.Rect(x*15*scale, 0*scale, 14*scale, 17*scale)
-    card = card_obj(card_rect, cards[x], deck_srf, deck_pos, scr)
+    card = card_obj(card_rect, cards[x], x, deck_pos, scr)
     card_group.add(card)
 
 for y in range(8):
     card_rect = pg.Rect(y*15*scale, 18*scale, 14*scale, 17*scale)
-    card = card_obj(card_rect, cards[y+8], deck_srf, deck_pos, scr)
+    card = card_obj(card_rect, cards[y+8], y+8, deck_pos, scr)
     card_group.add(card)
 
 #make the table obj
@@ -59,12 +87,17 @@ Table = table_obj((table_x, table_y))
 def main():
     loop = True
     while loop:
+        print(card_in_hover)
         scr.fill(bg_color)
         Table.blit(scr)
 
         scr.blit(deck_srf, deck_pos)
         deck_srf.fill(bg_color)
-        card_group.update()
+        for card in card_group:
+            if card_in_use:
+                card.hover = False
+            card.update(card_in_use)
+            hover_func(card.apparent_rect, card.marker)
         
         pg.display.update()
 

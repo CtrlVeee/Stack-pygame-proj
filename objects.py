@@ -13,7 +13,7 @@ def dead_cntr (scr, dim):
 
 
 class card_obj(pg.sprite.Sprite):
-    def __init__(self, rect_data, kindOf, srf, deckPos, screen):
+    def __init__(self, rect_data, kindOf, int_val, deckPos, screen):
         pg.sprite.Sprite.__init__(self)
         self.rect = rect_data 
         self.img = kindOf #what color and symbol
@@ -22,6 +22,7 @@ class card_obj(pg.sprite.Sprite):
         self.blit_img = self.flipped_img
         self.blit_srf = screen
         self.screen = screen
+        self.marker = int_val
         
         self.hint_active = False
         self.hover = False #tracks if mouse hovers over card
@@ -41,35 +42,34 @@ class card_obj(pg.sprite.Sprite):
         #print(self.hover_rect)
 
         # the card objs will be updated through a sprite group
-    def mouse_track(self):
+    def mouse_track(self, in_use):
         mos_pos = pg.mouse.get_pos()
 
-        if self.apparent_rect.collidepoint(mos_pos):
+        if self.apparent_rect.collidepoint(mos_pos) and not in_use:
             self.hover = True
         else:
             self.hover = False
-    def grab_card(self):
-        mos_pos = pg.mouse.get_pos()
-        dx = mos_pos[0] - int(self.apparent_rect.width)/2
-        dy = mos_pos[1] - int(self.apparent_rect.height)/2
-        #print(dx, dy)
-        self.blit_srf.blit(self.img, (dx, dy))
     
-    def update(self):
+    def update(self, in_use):
         pressed = pg.mouse.get_pressed()[0]
-        self.mouse_track()
+        self.mouse_track(in_use)
         self.blit_srf.blit(self.blit_img, self.apparent_rect)
+        if self.hover:            
+            self.blit_srf.blit(self.img, self.hover_rect)
         '''
         if pressed:
             self.grab = True
             self.hover = False
             self.grab_card()
         '''
-
-        if self.hover:            
-            self.blit_srf.blit(self.img, self.hover_rect)
+        #This is where the mouse mecha originally was
+        
+        '''
             # from this point to the end of the func 
             # is where the mouse mech is made
+            #error, all cards are subject to the hover effect 
+            #despite already selected a card... 
+            #grab_card display overlaps with teh other imgs
             if pressed:
                 self.grab = True
                 self.hover = False
@@ -78,6 +78,7 @@ class card_obj(pg.sprite.Sprite):
             self.grab_card()
         if not pressed:
             self.grab = False
+        '''
 
 class table_obj:
     def __init__(self, pos):
