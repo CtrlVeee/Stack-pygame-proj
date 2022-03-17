@@ -1,7 +1,7 @@
 import pygame as pg
 from objects import *
 
-#next task is put card select into table obj
+#next task is enter button mecha
 
 pg.init()
 #convert all sprites to 4x size
@@ -18,6 +18,7 @@ pink = pg.Color(255, 128, 170)
 
 card_in_hover = 17
 card_in_use = False
+slot_data = [-1, -1, -1, -1]
 
 #surface for the deck selection
 deck_srf = pg.Surface((119*scale, 36*scale)).convert_alpha()
@@ -68,16 +69,28 @@ def hover_func(rect, index):
         card_in_use = False
 
 # make the card objects
-card_group = pg.sprite.Group()
+#card_group = pg.sprite.Group() #--test so that i can access the items as a list
+card_group = []
 for x in range(8):
     card_rect = pg.Rect(x*15*scale, 0*scale, 14*scale, 17*scale)
     card = card_obj(card_rect, cards[x], x, deck_pos, scr)
-    card_group.add(card)
+    #card_group.add(card)
+    card_group.append(card)
 
 for y in range(8):
     card_rect = pg.Rect(y*15*scale, 18*scale, 14*scale, 17*scale)
     card = card_obj(card_rect, cards[y+8], y+8, deck_pos, scr)
-    card_group.add(card)
+    #card_group.add(card)
+    card_group.append(card)
+
+def update_deck(data):
+    global card_group
+    for val in data:
+        if val == -1:
+            card_group[val].in_use = False
+        elif val != -1:
+            card_group[val].in_use = True
+
 
 #make the table obj
 table_x = int((scr_w - 94*scale)/2) 
@@ -85,19 +98,29 @@ table_y = int((scr_h - 37*scale)/2) - 80
 Table = table_obj((table_x, table_y))
 
 def main():
+    global slot_data
+    global card_group
     loop = True
     while loop:
-        
+        print(slot_data)
         scr.fill(bg_color)
-        Table.blit(scr, card_in_hover, card_in_use)
+        slot_data = Table.blit(scr, card_in_hover, card_in_use)
 
         scr.blit(deck_srf, deck_pos)
         deck_srf.fill(bg_color)
         for card in card_group:
+            for val in slot_data:
+                if card.marker == val:
+                    card.in_use = True
+                    break
+                else:
+                    card.in_use = False
+                    continue
             if card_in_use:
                 card.hover = False
             card.update(card_in_use)
-            hover_func(card.apparent_rect, card.marker)
+            if not card.in_use:
+                hover_func(card.apparent_rect, card.marker)
         
         pg.display.update()
 

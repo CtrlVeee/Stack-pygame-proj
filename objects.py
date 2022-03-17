@@ -24,6 +24,9 @@ class card_obj(pg.sprite.Sprite):
         flipped_img = pg.image.load("flipped-card.png").convert_alpha()
         self.flipped_img = pg.transform.scale(flipped_img, (14*scale, 17*scale))
 
+        empty_img = pg.image.load("empty-card.png").convert_alpha()
+        self.empty_img = pg.transform.scale(empty_img, (14*scale, 17*scale))
+
         self.blit_img = self.flipped_img
         self.blit_srf = screen
         self.screen = screen
@@ -52,7 +55,11 @@ class card_obj(pg.sprite.Sprite):
             self.hover = False
     
     def update(self, in_use):
-        self.mouse_track(in_use)
+        if self.in_use:
+            self.blit_img = self.empty_img
+        elif not self.in_use:
+            self.blit_img = self.flipped_img
+            self.mouse_track(in_use)
         self.blit_srf.blit(self.blit_img, self.apparent_rect)
         if self.hover:            
             self.blit_srf.blit(self.img, self.hover_rect)
@@ -157,10 +164,11 @@ class table_obj:
             self.srf.blit(blit_img, card[1])
 
     def blit(self, scr, int_val, card_in_use):
-        print(self.data_list)
+        #print(self.data_list)
         if self.active_state:
             self.srf.blit(self.scaled_img, (0,0), (0, 0, 94*scale, 37*scale))
         else:
             self.srf.blit(self.scaled_img, (0,0), (0, 37*scale, 94*scale, 37*scale))
         self.card_func(int_val, card_in_use, scr)
         scr.blit(self.srf, self.pos)
+        return self.data_list
