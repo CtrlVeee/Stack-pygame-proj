@@ -172,3 +172,34 @@ class table_obj:
         self.card_func(int_val, card_in_use, scr)
         scr.blit(self.srf, self.pos)
         return self.data_list
+
+class button:
+    def __init__(self, pos, sheet):
+        self.sheet = sheet #spritesheet
+        rect = self.sheet.get_rect()
+        self.rect = pg.Rect(pos[0], pos[1], rect.width, rect.height/2)
+        self.sheet = pg.transform.scale(self.sheet, (rect.width*scale, int(rect.height)*scale))
+
+        self.blit_srf = pg.Surface((rect.width * scale, rect.height/2 *scale)) # img to blit
+        self.default_img = pg.Surface((rect.width * scale, rect.height/2 * scale)) # non hover
+        self.pressed_img = pg.Surface((rect.width * scale, rect.height/2 * scale)) # mouse hover
+
+        self.default_img.blit(self.sheet, (0,0), (0, 0, rect.width*scale, rect.height/2*scale))
+        self.pressed_img.blit(self.sheet, (0,0), (0, rect.height/2*scale, rect.width*scale, rect.height/2*scale))
+
+        self.mouse_hover = False
+        self.clicked = False
+    def update(self, scr):
+        mos_pos = pg.mouse.get_pos()
+        pressed = pg.mouse.get_pressed()[0]
+
+        self.blit_srf.blit(self.default_img, (0,0))
+
+        '''
+        if self.rect.collidepoint(mos_pos):
+            self.blit_srf.blit(self.pressed_img, (0,0))
+            if pressed:
+                return True
+        '''
+
+        scr.blit(self.blit_srf, self.rect)

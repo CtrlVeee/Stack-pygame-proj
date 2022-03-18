@@ -1,3 +1,4 @@
+from tkinter import Button
 import pygame as pg
 from objects import *
 
@@ -19,6 +20,13 @@ pink = pg.Color(255, 128, 170)
 card_in_hover = 17
 card_in_use = False
 slot_data = [-1, -1, -1, -1]
+
+def check_full(data):
+    try:
+        a = data.index(-1)
+        return False
+    except:
+        return True
 
 #surface for the deck selection
 deck_srf = pg.Surface((119*scale, 36*scale)).convert_alpha()
@@ -97,14 +105,23 @@ table_x = int((scr_w - 94*scale)/2)
 table_y = int((scr_h - 37*scale)/2) - 80
 Table = table_obj((table_x, table_y))
 
+#make buttons here
+enter_sheet = pg.image.load("enter-button.png").convert_alpha()
+enter_pos = dead_cntr(enter_sheet, dimen)
+enter_pos[0] -= 5*scale
+enter_pos[1] -= 4*scale
+Enter_button = button(enter_pos, enter_sheet)
+
 def main():
     global slot_data
     global card_group
     loop = True
     while loop:
-        print(slot_data)
+        #print(slot_data)
         scr.fill(bg_color)
         slot_data = Table.blit(scr, card_in_hover, card_in_use)
+        if check_full(slot_data):
+            Enter_button.update(scr)
 
         scr.blit(deck_srf, deck_pos)
         deck_srf.fill(bg_color)
