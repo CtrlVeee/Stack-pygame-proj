@@ -30,6 +30,16 @@ class card_obj():
         self.blit_srf = screen
         self.screen = screen
 
+        self.hints = []
+        hint_sheet = pg.image.load("deck-card-hint-sheet.png").convert_alpha()
+        for y in range(3):
+            hint = pg.Surface((14, 6)).convert_alpha()
+            hint.blit(hint_sheet, (0,0), (0, y*6, 14, 6))
+            hint = pg.transform.scale(hint, (14*scale, 6*scale))
+            hint.set_colorkey(pg.Color(255, 128, 170))
+            self.hints.append(hint)
+        
+        self.hint_state = 4 #hint display
         self.marker = int_val
         self.hint_active = False
         self.hover = False #tracks if mouse hovers over card
@@ -43,6 +53,11 @@ class card_obj():
         self.apparent_rect = pg.Rect(new_x, new_y, self.rect.w, self.rect.h)
         hover_y = self.apparent_rect.y - 6*scale
         self.hover_rect = pg.Rect(self.apparent_rect.x, hover_y, self.rect.w, self.rect.h)
+
+        hint_dimen = [self.hover_rect.width, self.hover_rect.height]
+        hint_pos = [self.hover_rect.x, self.hover_rect.y]
+        hint_pos[1] += 12*scale 
+        self.hint_rect = pg.Rect(hint_pos[0], hint_pos[1], hint_dimen[0], hint_dimen[1])
 
         # the card objs will be updated through a sprite group
     def mouse_track(self, in_use):
@@ -62,7 +77,9 @@ class card_obj():
         self.blit_srf.blit(self.blit_img, self.apparent_rect)
         if self.hover:            
             self.blit_srf.blit(self.img, self.hover_rect)
-
+            try:
+                self.blit_srf.blit(self.hints[self.hint_state - 1], self.hint_rect )
+            except: pass
 class table_obj:
     def __init__(self, pos):
         #init all img
@@ -176,6 +193,7 @@ class table_obj:
                 blit_img = card[0][0]
             else:
                 blit_img = card[0][1]
+
             if self.mouse_collide(card[3]) and card_in_use and not pressed_list[0]:
                 card[2] = int_val
             elif self.mouse_collide(card[3]) and not card_in_use and pressed_list[2]:
