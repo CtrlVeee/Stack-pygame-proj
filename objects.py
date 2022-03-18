@@ -15,9 +15,8 @@ def dead_cntr (scr, dim):
     return [x, y]
 
 
-class card_obj(pg.sprite.Sprite):
+class card_obj():
     def __init__(self, rect_data, kindOf, int_val, deckPos, screen):
-        pg.sprite.Sprite.__init__(self)
         self.rect = rect_data 
         self.img = kindOf #what color and symbol
 
@@ -92,19 +91,40 @@ class table_obj:
             add_card = pg.transform.scale(init_card, (18*scale, 24*scale))
             self.cards.append(add_card)
 
+        self.hints = []
+        hint_sheet = pg.image.load("hint-sheet.png").convert_alpha()
+        for x in range(3):
+            pair = []
+            dark = pg.Surface((12, 14)).convert_alpha()
+            dark.blit(hint_sheet, (0,0), (0, x*14, 12, 14))
+            dark = pg.transform.scale(dark, (12*scale, 14*scale))
+            pair.append(dark)
+
+            light = pg.Surface((12, 14)).convert_alpha()
+            light.blit(hint_sheet, (0,0), (12, x*14, 12, 14))
+            light = pg.transform.scale(light, (12*scale, 14*scale))
+            pair.append(light)
+
+            self.hints.append(pair)
+
         #setup slot data
         self.slot_list = []
         for x in range(4):
-            slot_srf = pg.Surface((18*scale, 24*scale)).convert_alpha()
-            slot_srf.blit(self.scaled_cell_img, (0,0), (0, 0, 18*scale, 24*scale))
+            slot_srf_dark = pg.Surface((18*scale, 24*scale)).convert_alpha()
+            slot_srf_light = pg.Surface((18*scale, 24*scale)).convert_alpha()
+            slot_srf_dark.blit(self.scaled_cell_img, (0,0), (0, 0, 18*scale, 24*scale))
+            slot_srf_light.blit(self.scaled_cell_img, (0,0), (18*scale, 0, 18*scale, 24*scale))
+            slot_srf = [slot_srf_dark, slot_srf_light]
+            
             slot_pos = [(89 - (18*(x+1)) - 4*x )*scale, int((37-24)/2)*scale]
 
             new_x = slot_pos[0] + self.pos[0]
             new_y = slot_pos[1] + self.pos[1]
             slot_rect = pg.Rect(new_x, new_y, 18*scale, 24*scale)
-            #add empty_img, then pos, then card_img (-1 is none)
+            hint_state = 4 #default 4=none
+            #add empty_img, then pos, then card_img (-1 is none), then hint-state
 
-            card = [slot_srf, slot_pos, -1, slot_rect]
+            card = [slot_srf, slot_pos, -1, slot_rect, hint_state]
             self.slot_list.append(card)
         # white or dark frame
         self.active_state = False
@@ -152,7 +172,10 @@ class table_obj:
         #print(card_in_use)
         pressed_list = pg.mouse.get_pressed()
         for card in self.slot_list:
-            blit_img = card[0]
+            if self.active_state:
+                blit_img = card[0][0]
+            else:
+                blit_img = card[0][1]
             if self.mouse_collide(card[3]) and card_in_use and not pressed_list[0]:
                 card[2] = int_val
             elif self.mouse_collide(card[3]) and not card_in_use and pressed_list[2]:
@@ -162,6 +185,10 @@ class table_obj:
                 blit_img = self.cards[card[2]]
             self.update_data()
             self.srf.blit(blit_img, card[1])
+            try:
+                hint_rect = [card[1][0] - scale, card[1][1] - 2*scale]
+                self.srf.blit(self.hints[card[4]-1][1], (hint_rect))
+            except: pass
 
     def blit(self, scr, int_val, card_in_use):
         #print(self.data_list)
@@ -202,6 +229,11 @@ class button:
         
         if self.hover:
             img = self.pressed_img
+            if pressed and not self.clicked:
+                self.clicked = True
+                # return true in main.py file
+            if not pressed:
+                self.clicked = False
         elif not self.hover:
             img = self.default_img
         self.blit_srf.blit(img, (0,0))

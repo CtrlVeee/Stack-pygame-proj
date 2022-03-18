@@ -120,6 +120,11 @@ def main():
         #print(slot_data)
         scr.fill(bg_color)
         slot_data = Table.blit(scr, card_in_hover, card_in_use)
+
+        if slot_data != [-1, -1, -1, -1]:
+            Table.active_state = True
+        else:
+            Table.active_state = False
         if check_full(slot_data):
             Enter_button.update(scr)
 
