@@ -177,7 +177,7 @@ class button:
     def __init__(self, pos, sheet):
         self.sheet = sheet #spritesheet
         rect = self.sheet.get_rect()
-        self.rect = pg.Rect(pos[0], pos[1], rect.width, rect.height/2)
+        self.rect = pg.Rect(pos[0], pos[1], rect.width*scale, rect.height/2*scale)
         self.sheet = pg.transform.scale(self.sheet, (rect.width*scale, int(rect.height)*scale))
 
         self.blit_srf = pg.Surface((rect.width * scale, rect.height/2 *scale)) # img to blit
@@ -192,14 +192,17 @@ class button:
     def update(self, scr):
         mos_pos = pg.mouse.get_pos()
         pressed = pg.mouse.get_pressed()[0]
+        img = self.default_img
+        #print(f"{self.rect} : {mos_pos}")
 
-        self.blit_srf.blit(self.default_img, (0,0))
-
-        '''
         if self.rect.collidepoint(mos_pos):
-            self.blit_srf.blit(self.pressed_img, (0,0))
-            if pressed:
-                return True
-        '''
-
+            self.hover = True
+        else:
+            self.hover = False
+        
+        if self.hover:
+            img = self.pressed_img
+        elif not self.hover:
+            img = self.default_img
+        self.blit_srf.blit(img, (0,0))
         scr.blit(self.blit_srf, self.rect)
